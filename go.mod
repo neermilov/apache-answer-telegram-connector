@@ -1,4 +1,4 @@
-module fox.flant.com/nikita.ermilov/apache-answer-telegram-connector
+module github.com/neermilov/apache-answer-telegram-connector
 
 go 1.23.0
 

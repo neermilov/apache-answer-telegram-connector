@@ -13,9 +13,9 @@ import (
 	"strings"
 	"time"
 
-	"fox.flant.com/nikita.ermilov/apache-answer-telegram-connector/i18n"
 	"github.com/apache/answer-plugins/util"
 	"github.com/apache/answer/plugin"
+	"github.com/neermilov/apache-answer-telegram-connector/i18n"
 	"github.com/segmentfault/pacman/log"
 )
 
