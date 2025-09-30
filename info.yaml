@@ -2,4 +2,4 @@ slug_name: telegram_connector
 type: connector
 version: 1.0.0
 author: nikita.ermilov@flant.com
-link: http://fox.flant.com/nikita.ermilov/apache-answer-telegram-connector
+link: http://github.com/neermilov/apache-answer-telegram-connector

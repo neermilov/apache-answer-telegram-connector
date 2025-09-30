@@ -10,7 +10,7 @@ RUN apk --no-cache add \
 
 RUN answer build \
     --with github.com/apache/answer-plugins/connector-basic \
-    --with github.com/neermilov/apache-answer-telegram-connector \
+    --with github.com/neermilov/apache-answer-telegram-connector@latest \
     --output /usr/bin/new_answer
 
 FROM alpine
