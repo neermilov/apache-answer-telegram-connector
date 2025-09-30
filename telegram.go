@@ -55,11 +55,30 @@ func getEnvWithDefault(key, defaultValue string) string {
 	return value
 }
 
+// maskToken маскирует токен для безопасного вывода в лог
+func maskToken(token string) string {
+	if token == "" {
+		return "не задан"
+	}
+	if len(token) <= 8 {
+		return "***"
+	}
+	return token[:4] + "..." + token[len(token)-4:]
+}
+
 func init() {
+	botToken := getEnvWithDefault("TELEGRAM_BOT_TOKEN", "")
+	botUsername := getEnvWithDefault("TELEGRAM_BOT_USERNAME", "")
+	redirectPath := getEnvWithDefault("TELEGRAM_REDIRECT_PATH", "")
+
+	log.Infof("TELEGRAM_BOT_TOKEN: %s", maskToken(botToken))
+	log.Infof("TELEGRAM_BOT_USERNAME: '%s'", botUsername)
+	log.Infof("TELEGRAM_REDIRECT_PATH: '%s'", redirectPath)
+
 	config := &ConnectorConfig{
-		BotToken:     getEnvWithDefault("TELEGRAM_BOT_TOKEN", ""),
-		BotUsername:  getEnvWithDefault("TELEGRAM_BOT_USERNAME", ""),
-		RedirectPath: getEnvWithDefault("TELEGRAM_REDIRECT_PATH", ""),
+		BotToken:     botToken,
+		BotUsername:  botUsername,
+		RedirectPath: redirectPath,
 	}
 
 	plugin.Register(&Connector{
@@ -104,7 +123,7 @@ func (t *Connector) ConnectorSender(ctx *plugin.GinContext, receiverURL string) 
 
 	botUsername := t.Config.BotUsername
 	if botUsername == "" {
-		log.Error("TELEGRAM_BOT_USERNAME not set, login widget won't work correctly")
+		log.Error("TELEGRAM_BOT_USERNAME not set or empty, login widget won't work correctly")
 	}
 
 	htmlContent := fmt.Sprintf(`

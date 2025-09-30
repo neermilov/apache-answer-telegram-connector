@@ -38,10 +38,6 @@ COPY --from=answer-builder /data /data
 COPY --from=answer-builder /entrypoint.sh /entrypoint.sh
 RUN chmod 755 /entrypoint.sh
 
-# Переменные окружения Telegram
-ARG TELEGRAM_BOT_TOKEN
-ARG TELEGRAM_BOT_USERNAME
-ARG TELEGRAM_REDIRECT_PATH
 ENV TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-""}
 ENV TELEGRAM_BOT_USERNAME=${TELEGRAM_BOT_USERNAME:-""}
 ENV TELEGRAM_REDIRECT_PATH=${TELEGRAM_REDIRECT_PATH:-""}
