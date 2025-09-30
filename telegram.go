@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -30,7 +31,7 @@ type Connector struct {
 // ConnectorConfig содержит настройки плагина
 type ConnectorConfig struct {
 	BotToken     string `json:"bot_token"`
-	WidgetHTML   string `json:"widget_html"`
+	BotUsername  string `json:"bot_username"`
 	RedirectPath string `json:"redirect_path"`
 }
 
@@ -45,9 +46,24 @@ type TelegramAuthData struct {
 	Hash      string `json:"hash"`
 }
 
+// getEnvWithDefault возвращает значение переменной окружения или значение по умолчанию
+func getEnvWithDefault(key, defaultValue string) string {
+	value := os.Getenv(key)
+	if value == "" {
+		return defaultValue
+	}
+	return value
+}
+
 func init() {
+	config := &ConnectorConfig{
+		BotToken:     getEnvWithDefault("TELEGRAM_BOT_TOKEN", ""),
+		BotUsername:  getEnvWithDefault("TELEGRAM_BOT_USERNAME", ""),
+		RedirectPath: getEnvWithDefault("TELEGRAM_REDIRECT_PATH", ""),
+	}
+
 	plugin.Register(&Connector{
-		Config: &ConnectorConfig{},
+		Config: config,
 	})
 }
 
@@ -83,26 +99,25 @@ func (t *Connector) ConnectorSlugName() string {
 
 // ConnectorSender генерирует HTML-страницу с виджетом входа Telegram
 func (t *Connector) ConnectorSender(ctx *plugin.GinContext, receiverURL string) (redirectURL string) {
-	// Вместо редиректа на Telegram рендерим HTML со встроенным виджетом.
+	// Вместо редиректа на Telegram рендерим HTML со встроенным стандартным виджетом.
 	// После успешной аутентификации пользователь будет перенаправлен на receiverURL.
-	htmlContent := t.Config.WidgetHTML
 
-	// Если не задан пользовательский HTML, используем шаблон по умолчанию
-	if htmlContent == "" {
-		htmlContent = fmt.Sprintf(`
-			<div id="telegram-login-widget">
-				<script async src="https://telegram.org/js/telegram-widget.js?22" 
-					data-telegram-login="%s" 
-					data-size="large" 
-					data-auth-url="%s" 
-					data-request-access="write">
-				</script>
-			</div>
-		`, t.getBotName(), receiverURL)
-	} else {
-		// Вставляем реальный receiverURL в пользовательский HTML
-		htmlContent = strings.Replace(htmlContent, "{{receiverURL}}", receiverURL, -1)
+	botUsername := t.Config.BotUsername
+	if botUsername == "" {
+		log.Error("TELEGRAM_BOT_USERNAME not set, login widget won't work correctly")
 	}
+
+	htmlContent := fmt.Sprintf(`
+		<div id="telegram-login-widget">
+			<script async src="https://telegram.org/js/telegram-widget.js?22" 
+				data-telegram-login="%s" 
+				data-size="large" 
+				data-radius="8"
+				data-auth-url="%s" 
+				data-request-access="write">
+			</script>
+		</div>
+	`, botUsername, receiverURL)
 
 	tmpl, err := template.New("telegram_login").Parse(`
 		<!DOCTYPE html>
@@ -216,19 +231,6 @@ func (t *Connector) ConnectorReceiver(ctx *plugin.GinContext, receiverURL string
 	}
 
 	return userInfo, nil
-}
-
-// getBotName извлекает имя бота из токена
-func (t *Connector) getBotName() string {
-	if t.Config.BotToken == "" {
-		return "bot"
-	}
-
-	parts := strings.Split(t.Config.BotToken, ":")
-	if len(parts) > 0 {
-		return parts[0]
-	}
-	return "bot"
 }
 
 // verifyTelegramAuth проверяет подлинность данных от Telegram
