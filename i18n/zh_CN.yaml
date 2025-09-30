@@ -1,0 +1,26 @@
+plugin:
+  telegram_connector:
+    backend:
+      name:
+        other: Telegram
+      info:
+        name:
+          other: Telegram 连接器
+        description:
+          other: 连接 Telegram 进行第三方登录
+      config:
+        bot_token:
+          title:
+            other: Bot Token
+          description:
+            other: 从 BotFather 获取的 Telegram 机器人 Token
+        widget_html:
+          title:
+            other: 小部件 HTML
+          description:
+            other: 可选的 Telegram 登录小部件的 HTML 代码。使用 {{receiverURL}} 作为回调 URL 的占位符。
+        redirect_path:
+          title:
+            other: 重定向路径
+          description:
+            other: 登录重定向的可选自定义路径（留空则使用默认路径）

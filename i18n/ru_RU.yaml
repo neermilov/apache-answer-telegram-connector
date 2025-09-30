@@ -1,0 +1,26 @@
+plugin:
+  telegram_connector:
+    backend:
+      name:
+        other: Telegram
+      info:
+        name:
+          other: Коннектор Telegram
+        description:
+          other: Подключение к Telegram для авторизации через сторонние сервисы
+      config:
+        bot_token:
+          title:
+            other: Токен бота
+          description:
+            other: Токен бота от BotFather для вашего приложения в Telegram
+        widget_html:
+          title:
+            other: HTML виджета
+          description:
+            other: Необязательный HTML-код для виджета входа в Telegram. Используйте {{receiverURL}} как заполнитель для URL обратного вызова.
+        redirect_path:
+          title:
+            other: Путь перенаправления
+          description:
+            other: Необязательный пользовательский путь перенаправления при входе (оставьте пустым для значения по умолчанию)

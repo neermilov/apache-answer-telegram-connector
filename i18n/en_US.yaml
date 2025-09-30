@@ -1,0 +1,26 @@
+plugin:
+  telegram_connector:
+    backend:
+      name:
+        other: Telegram
+      info:
+        name:
+          other: Telegram Connector
+        description:
+          other: Connect to Telegram for third-party login
+      config:
+        bot_token:
+          title:
+            other: Bot Token
+          description:
+            other: Bot Token from BotFather for your Telegram application
+        widget_html:
+          title:
+            other: Widget HTML
+          description:
+            other: Optional HTML code for the Telegram Login Widget. Use {{receiverURL}} as a placeholder for the callback URL.
+        redirect_path:
+          title:
+            other: Redirect Path
+          description:
+            other: Optional custom path for the login redirect (leave empty for default)
